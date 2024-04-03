@@ -2,11 +2,11 @@ package fr.univamu.iut.rapidamangermenu;
 
 import java.sql.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
+public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
 
     protected Connection dbConnection;
-
 
     public MenuRepositoryDB(String infoConnection, String user, String pwd ) throws java.sql.SQLException, java.lang.ClassNotFoundException {
         Class.forName("org.mariadb.jdbc.Driver");
@@ -16,12 +16,12 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
     public MenuRepositoryDB(Connection connection) {
         this.dbConnection = connection;
     }
+
     @Override
     public void close() {
-        try{
+        try {
             dbConnection.close();
-        }
-        catch(SQLException e){
+        } catch(SQLException e) {
             System.err.println(e.getMessage());
         }
     }
@@ -34,7 +34,6 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
                 "FROM menu " +
                 "LEFT JOIN compos_menu ON menu.id_menu = compos_menu.id_menu " +
                 "WHERE menu.id_menu = ?";
-
 
         try {
             try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
@@ -51,10 +50,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
                     ArrayList<Integer> list_dish = new ArrayList<>();
                     do {
                         int id_dish = result.getInt("id_dish");
-                        int number = result.getInt("number");
-                        for (int i = 0; i < number; i++) {
-                            list_dish.add(id_dish);
-                        }
+                        list_dish.add(id_dish);
                     } while (result.next());
 
                     selectedMenu = new Menu(name, id_menu, price, last_update, creator, list_dish);
@@ -65,11 +61,6 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
         }
         return selectedMenu;
     }
-
-
-
-
-
 
     @Override
     public ArrayList<Menu> getAllMenu() {
@@ -96,10 +87,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
 
                     while (result1.next()) {
                         int id_dish = result1.getInt("id_dish");
-                        int number = result1.getInt("number");
-                        for (int i = 0; i < number; i++) {
-                            listDish.add(id_dish);
-                        }
+                        listDish.add(id_dish);
                     }
                 }
 
@@ -112,22 +100,17 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
         return listMenu;
     }
 
-
-
     @Override
     public boolean deleteMenu(String id) {
         String deleteMenuQuery = "DELETE FROM menu WHERE id_menu=?";
         String deleteComposMenuQuery = "DELETE FROM compos_menu WHERE id_menu=?";
         int nbRowModified = 0;
 
-        // construction et exécution d'une requête préparée pour supprimer le menu
         try (PreparedStatement psDeleteMenu = dbConnection.prepareStatement(deleteMenuQuery);
              PreparedStatement psDeleteComposMenu = dbConnection.prepareStatement(deleteComposMenuQuery)) {
-            // Supprimer d'abord les entrées dans la table compos_menu liées à ce menu
             psDeleteComposMenu.setString(1, id);
             psDeleteComposMenu.executeUpdate();
 
-            // Ensuite, supprimer le menu lui-même
             psDeleteMenu.setString(1, id);
             nbRowModified = psDeleteMenu.executeUpdate();
         } catch (SQLException e) {
@@ -137,11 +120,10 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
         return (nbRowModified != 0);
     }
 
-
     @Override
     public String createMenu(String name, Integer id_menu, Float price, String last_update, String creator, ArrayList<Integer> list_dish) {
         String queryMenu = "INSERT INTO menu(name, id_menu, price, last_update, creator) VALUES (?, ?, ?, ?, ?)";
-        String queryComposMenu = "INSERT INTO compos_menu(id_menu, id_dish, number) VALUES (?, ?, ?)";
+        String queryComposMenu = "INSERT INTO compos_menu(id_menu, id_dish) VALUES (?, ?)";
         int newId = -1;
 
         try (PreparedStatement ps = dbConnection.prepareStatement(queryMenu, Statement.RETURN_GENERATED_KEYS)) {
@@ -159,7 +141,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    newId = rs.getInt(1); // Récupérer l'ID généré
+                    newId = rs.getInt(1);
                 } else {
                     throw new SQLException("Insertion du menu a échoué, aucun ID généré.");
                 }
@@ -168,27 +150,17 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
             throw new RuntimeException("Erreur lors de la création du menu : " + e.getMessage());
         }
 
-        // Maintenant, insérez les entrées dans la table compos_menu
         try (PreparedStatement ps = dbConnection.prepareStatement(queryComposMenu)) {
             for (Integer dishId : list_dish) {
-                // Récupérer le nombre de fois que ce plat apparaît dans list_dish
-                int number = Collections.frequency(list_dish, dishId);
-
-                ps.setInt(1, newId); // ID du nouveau menu
-                ps.setInt(2, dishId); // ID du plat
-                ps.setInt(3, number); // Nombre d'occurrences dans list_dish
-
-                ps.addBatch(); // Ajouter la requête à une batch pour l'exécuter une fois
+                ps.setInt(1, newId);
+                ps.setInt(2, dishId);
+                ps.executeUpdate();
             }
-            // Exécuter toutes les requêtes en une seule transaction
-            ps.executeBatch();
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de l'insertion des éléments de menu : " + e.getMessage());
         }
 
-
         return String.valueOf(newId);
     }
-
 
 }
