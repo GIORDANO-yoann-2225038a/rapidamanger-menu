@@ -171,9 +171,12 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
         // Maintenant, insérez les entrées dans la table compos_menu
         try (PreparedStatement ps = dbConnection.prepareStatement(queryComposMenu)) {
             for (Integer dishId : list_dish) {
+                // Récupérer le nombre de fois que ce plat apparaît dans list_dish
+                int number = Collections.frequency(list_dish, dishId);
+
                 ps.setInt(1, newId); // ID du nouveau menu
                 ps.setInt(2, dishId); // ID du plat
-                ps.setInt(3, 1); // Nombre (à modifier selon vos besoins)
+                ps.setInt(3, number); // Nombre d'occurrences dans list_dish
 
                 ps.addBatch(); // Ajouter la requête à une batch pour l'exécuter une fois
             }
@@ -182,6 +185,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
         } catch (SQLException e) {
             throw new RuntimeException("Erreur lors de l'insertion des éléments de menu : " + e.getMessage());
         }
+
 
         return String.valueOf(newId);
     }
