@@ -32,7 +32,7 @@ public class MenuRepository  implements MenuRepositoryInterface, Closeable{
     }
 
     @Override
-    public String createMenu (String name, Integer id_menu,Float price, String last_update, String id_creator, ArrayList<Integer> list_dish) {
+    public String createMenu (String name, Integer id_menu,Float price, String last_update, String creator, ArrayList<Integer> list_dish) {
         return null;
     }
 

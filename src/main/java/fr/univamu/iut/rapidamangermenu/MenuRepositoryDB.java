@@ -46,7 +46,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
                     Integer id_menu = result.getInt("id_menu");
                     Float price = result.getFloat("price");
                     String last_update = result.getString("last_update");
-                    String id_creator = result.getString("id_creator");
+                    String creator = result.getString("creator");
 
                     ArrayList<Integer> list_dish = new ArrayList<>();
                     do {
@@ -57,7 +57,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
                         }
                     } while (result.next());
 
-                    selectedMenu = new Menu(name, id_menu, price, last_update, id_creator, list_dish);
+                    selectedMenu = new Menu(name, id_menu, price, last_update, creator, list_dish);
                 }
             }
         } catch (SQLException e) {
@@ -85,7 +85,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
                 Integer id_menu = result.getInt("id_menu");
                 Float price = result.getFloat("price");
                 String last_update = result.getString("last_update");
-                String id_creator = result.getString("id_creator");
+                String creator = result.getString("creator");
 
                 ArrayList<Integer> listDish = new ArrayList<>();
 
@@ -103,7 +103,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
                     }
                 }
 
-                Menu currentMenu = new Menu(name, id_menu, price, last_update, id_creator, listDish);
+                Menu currentMenu = new Menu(name, id_menu, price, last_update, creator, listDish);
                 listMenu.add(currentMenu);
             }
         } catch (SQLException e) {
@@ -139,8 +139,8 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
 
 
     @Override
-    public String createMenu(String name, Integer id_menu, Float price, String last_update, String id_creator, ArrayList<Integer> list_dish) {
-        String queryMenu = "INSERT INTO menu(name, id_menu, price, last_update, id_creator) VALUES (?, ?, ?, ?, ?)";
+    public String createMenu(String name, Integer id_menu, Float price, String last_update, String creator, ArrayList<Integer> list_dish) {
+        String queryMenu = "INSERT INTO menu(name, id_menu, price, last_update, creator) VALUES (?, ?, ?, ?, ?)";
         String queryComposMenu = "INSERT INTO compos_menu(id_menu, id_dish, number) VALUES (?, ?, ?)";
         int newId = -1;
 
@@ -149,7 +149,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
             ps.setInt(2, id_menu);
             ps.setFloat(3, price);
             ps.setString(4, last_update);
-            ps.setString(5, id_creator);
+            ps.setString(5, creator);
 
             int nbRowModified = ps.executeUpdate();
 

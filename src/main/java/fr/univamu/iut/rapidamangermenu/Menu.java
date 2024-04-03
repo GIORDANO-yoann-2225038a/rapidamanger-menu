@@ -9,19 +9,19 @@ public class Menu {
     protected Integer id_menu;
     protected Float price;
     protected String last_update;
-    protected Integer id_creator;
+    protected String creator;
     protected ArrayList<Integer> list_dish;
 
 
     public Menu() {
     }
 
-    public Menu(String name, Integer id_menu,Float price, String last_update,  id_creator, ArrayList<Integer> list_dish) {
+    public Menu(String name, Integer id_menu,Float price, String last_update, String creator, ArrayList<Integer> list_dish) {
         this.name = name;
         this.id_menu = id_menu;
         this.price = price;
         this.last_update = last_update;
-        this.id_creator = id_creator;
+        this.creator = creator;
         this.list_dish = list_dish;
 
     }
@@ -58,12 +58,12 @@ public class Menu {
         this.last_update = last_update;
     }
 
-    public String getId_creator() {
-        return id_creator;
+    public String getCreator() {
+        return creator;
     }
 
-    public void setId_creator(String id_creator) {
-        this.id_creator = id_creator;
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 
     public ArrayList<Integer> getList_dish() {
@@ -81,7 +81,7 @@ public class Menu {
                 " id_menu='" + id_menu + '\'' +
                 " price='" + price + '\'' +
                 ", last_update='" + last_update + '\'' +
-                ", id_creator='" + id_creator +
+                ", creator='" + creator +
                 ",list_dish='" + list_dish + '\'' +
                 '}';
 
