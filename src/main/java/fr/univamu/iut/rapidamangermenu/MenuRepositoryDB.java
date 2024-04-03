@@ -1,8 +1,7 @@
 package fr.univamu.iut.rapidamangermenu;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
 
@@ -35,6 +34,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
                 "FROM menu " +
                 "LEFT JOIN compos_menu ON menu.id_menu = compos_menu.id_menu " +
                 "WHERE menu.id_menu = ?";
+
 
         try {
             try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
@@ -185,8 +185,6 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable{
 
         return String.valueOf(newId);
     }
-
-
 
 
 }
