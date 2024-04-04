@@ -84,16 +84,13 @@ public class MenuService {
         return result;
     }
 
-/*
-    public void addDishToMenu(int menudId, DishMenu dishMenu) {
+    public void addDishToMenu(int menuId, String dishMenu) {
         menuRepo.addDishToMenu(menuId, dishMenu);
     }
 
-
-    public void removeDishToMenu(int menuId, DishMenu dishId) {
+    public void removeDishToMenu(int menuId, String dishId) {
         menuRepo.removeDishToMenu(menuId, dishId);
     }
 
- */
 
 }

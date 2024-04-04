@@ -1,5 +1,7 @@
 package fr.univamu.iut.rapidamangermenu;
 
+import org.json.JSONObject;
+
 import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -184,15 +186,14 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         return (nbRowModified != 0);
     }
 
-/*
+
     @Override
-    public void addDishToMenu(int menuId, DishMenu dishMenu) {
-        String query = "INSERT INTO compos_menu (list_dish, id_menu) VALUES (?, ?)";
+    public void addDishToMenu(int menuId, String dishId) {
+        String query = "INSERT INTO compos_menu (id_menu, id_dish) VALUES (?, ?)";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
             ps.setInt(1, menuId);
-            ps.setInt(2, dishMenu.getDishId());
-
+            ps.setString(2, dishId);
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -201,13 +202,14 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
     }
 
 
+
     @Override
-    public void removeDishToMenu(int menuId, DishMenu dishId) {
-        String query = "DELETE FROM compos_menu WHERE list_dish=? AND id_menu=?";
+    public void removeDishToMenu(int menuId, String dishId) {
+        String query = "DELETE FROM compos_menu WHERE id_menu=? AND id_dish=?";
 
         try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
             ps.setInt(1, menuId);
-            ps.setInt(2, dishId.getDishId());
+            ps.setString(2, dishId);
 
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -215,6 +217,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         }
     }
 
- */
+
+
 
 }

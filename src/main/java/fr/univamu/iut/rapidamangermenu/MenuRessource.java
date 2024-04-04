@@ -122,23 +122,26 @@ public class MenuRessource {
     }
 
 
- /*
+
     @PUT
     @Path("{id}/add")
     @Consumes("application/json")
-    public Response addDishToMenu(@PathParam("id") int id, DishMenu dishMenu) {
-        service.addDishToMenu(id, dishMenu);
-        return Response.status(Response.Status.OK).entity("plats ajouté à la Commande").build();
+    public Response addDishToMenu(@PathParam("id") int id, String dish) {
+        JSONObject obj = new JSONObject(dish);
+        service.addDishToMenu(id,obj.getString("dishId"));
+        return Response.status(Response.Status.OK).entity("plat ajouté à la Commande").build();
     }
 
     @PUT
     @Path("{id}/remove")
     @Consumes("application/json")
-    public Response removeDishToMenu(@PathParam("id") int id, DishMenu dishMenu) {
-        service.removeDishToMenu(id, dishMenu);
+    public Response removeDishToMenu(@PathParam("id") int id, String dish) {
+        JSONObject obj = new JSONObject(dish);
+        service.removeDishToMenu(id, obj.getString("dishId"));
         return Response.status(Response.Status.OK).entity("plat supprimé du commande").build();
+
     }
 
-  */
+
 
 }

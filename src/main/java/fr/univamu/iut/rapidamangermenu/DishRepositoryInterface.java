@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public interface DishRepositoryInterface {
 
-    /*
+
 
     void close();
 
@@ -11,11 +11,11 @@ public interface DishRepositoryInterface {
 
     ArrayList<DishMenu> getAllDish();
 
-
+/*
     boolean updateDish(int menuId, String menuName, float price);
-
+*/
 
     DishMenu getDishMenu(int dishId);
 
- */
+
 }

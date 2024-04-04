@@ -9,14 +9,14 @@ import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 
 public class DishRepositoryAPI {
-/*
+
     String url;
 
     public DishRepositoryAPI(String url) {
         this.url = url;
     }
 
-
+/*
 
     @Override
     public void close() {
@@ -52,12 +52,14 @@ public class DishRepositoryAPI {
 
 
 
+
+
     @Override
     public DishMenu getDishMenu(int dishId) {
         return null;
     }
 
- */
+*/
 
 }
 

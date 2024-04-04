@@ -9,7 +9,7 @@ public class DishMenu {
 
     public DishMenu() {}
 
-    public DishMenu(int dishId, int menuId) {
+    public DishMenu(int menuId, int dishId) {
         this.dishId = dishId;
         this.menuId = menuId;
     }
