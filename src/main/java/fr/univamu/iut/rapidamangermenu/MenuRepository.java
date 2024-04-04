@@ -36,14 +36,10 @@ public class MenuRepository  implements MenuRepositoryInterface, Closeable{
         return null;
     }
 
-    /*
     @Override
-    public boolean UpdateMenu (Integer id_menu, String name, Integer last_update, String user_name) {
+    public boolean updateMenu (String id_menu, String name, String creator) {
         return false;
     }
 
-
-
-     */
 
 }

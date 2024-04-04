@@ -73,7 +73,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
 
             while (result.next()) {
                 String name = result.getString("name");
-                Integer id_menu = result.getInt("id_menu");
+                int id_menu = result.getInt("id_menu");
                 Float price = result.getFloat("price");
                 String last_update = result.getString("last_update");
                 String creator = result.getString("creator");
@@ -161,6 +161,28 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         }
 
         return String.valueOf(newId);
+    }
+
+
+    @Override
+    public boolean updateMenu(String id_menu, String name, String creator) {
+        String queryMenu = "UPDATE menu SET name=?, creator=? WHERE id_menu=?";
+
+        int nbRowModified = 0;
+
+        // Construction et exécution d'une requête préparée pour mettre à jour le menu
+        try (PreparedStatement psMenu = dbConnection.prepareStatement(queryMenu)) {
+            psMenu.setString(1, name);
+            psMenu.setString(2, creator);
+            psMenu.setString(3, id_menu);
+            nbRowModified += psMenu.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Construction et exécution de requêtes préparées pour mettre à jour les plats associés existant
+
+        return (nbRowModified != 0);
     }
 
 }

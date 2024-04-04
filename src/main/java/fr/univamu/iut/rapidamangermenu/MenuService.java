@@ -71,5 +71,17 @@ public class MenuService {
         }
     }
 
+    public String updateMenu(String id_menu, String name, String creator) {
+        String result = null;
+
+        // si le plat a été trouvé
+        if( menuRepo.updateMenu(id_menu, name, creator)) {
+            JSONObject updatedMenu = new JSONObject();
+            updatedMenu.put("id_menu", Integer.parseInt(id_menu));
+            result = updatedMenu.toString();
+        }
+
+        return result;
+    }
 
 }

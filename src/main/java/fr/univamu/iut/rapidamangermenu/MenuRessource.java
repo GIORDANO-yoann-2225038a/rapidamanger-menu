@@ -88,39 +88,38 @@ public class MenuRessource {
         return Response.ok(result).build();
     }
 
-
-/*
     @PUT
     @Path("{id}")
     @Consumes("application/json")
     @Produces("application/json")
-    public Response updateMenu(@PathParam("id") String id, String menuJson) {
+    public Response updateMenu(@PathParam("id") String menuId, String menuJson) {
         JSONObject newValueOfMenu = new JSONObject(menuJson);
-        JSONObject currentMenu = new JSONObject(service.getMenuJSON(id));
+        JSONObject currentMenu = new JSONObject(service.getMenuJSON(menuId));
 
-        // Initiate with the current value of the id_dish
+        // Initiate with the current value of the dish
         String name = currentMenu.getString("name");
-        Integer id_dish = currentMenu.getString("id_dish");
-        String price = currentMenu.getString("price");
+        String creator = currentMenu.getString("creator");
+
 
         // Change the value present in the body of the PUT request with the new value
         if (newValueOfMenu.has("name")) {
             name = newValueOfMenu.getString("name");
         }
-        if (newValueOfMenu.has("id_dish")) {
-            id_dish = newValueOfMenu.getString("id_dish");
-        }
-        if (newValueOfMenu.has("price")) {
-            price = newValueOfMenu.getString("price");
+        if (newValueOfMenu.has("creator")) {
+            creator = newValueOfMenu.getString("creator");
         }
 
-        String result = service.updateMenu(id, name, id_dish, price);
+
+        String result = service.updateMenu(menuId, name, creator);
+
+
 
         // si le plat n'a pas été trouvé ou que la modification a échoué
         if( result == null )
             return Response.status(Response.Status.NOT_FOUND).build();
 
         return Response.ok(result).build();
+
     }
-*/
+
 }
