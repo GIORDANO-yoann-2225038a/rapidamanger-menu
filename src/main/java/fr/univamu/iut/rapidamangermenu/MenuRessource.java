@@ -68,7 +68,6 @@ public class MenuRessource {
 
         String name = obj.getString("name");
         Float price = Float.parseFloat(obj.getString("price"));
-        String last_update = obj.getString("last_update");
         String creator = obj.getString("creator");
 
         // Suppose que list_dish est un tableau JSON d'entiers
@@ -78,7 +77,7 @@ public class MenuRessource {
             list_dish.add(listDishArray.getInt(i));
         }
 
-        String result = service.createMenu(name, price, last_update, creator, list_dish);
+        String result = service.createMenu(name, price, creator, list_dish);
 
         // si la création a échoué
         if (result == null)

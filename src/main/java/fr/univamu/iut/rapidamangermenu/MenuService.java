@@ -62,9 +62,9 @@ public class MenuService {
         return result;
     }
 
-    public String createMenu(String name, Float price, String last_update, String creator, ArrayList<Integer> list_dish) {
+    public String createMenu(String name, Float price, String creator, ArrayList<Integer> list_dish) {
         try (Jsonb jsonb = JsonbBuilder.create()) {
-            String idOfNewMenu = menuRepo.createMenu(name, price, last_update, creator, list_dish);
+            String idOfNewMenu = menuRepo.createMenu(name, price, creator, list_dish);
             return jsonb.toJson(Collections.singletonMap("id", Integer.parseInt(idOfNewMenu)));
         } catch (Exception e) {
             return "{\"error\": \"" + e.getMessage() + "\"}";

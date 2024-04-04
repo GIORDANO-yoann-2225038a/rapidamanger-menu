@@ -4,7 +4,10 @@ import org.json.JSONObject;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 import java.util.stream.Collectors;
+import java.sql.Timestamp;
+import java.util.Date;
 
 public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
 
@@ -123,16 +126,15 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
     }
 
     @Override
-    public String createMenu(String name, Float price, String last_update, String creator, ArrayList<Integer> list_dish) {
-        String queryMenu = "INSERT INTO menu(name, price, last_update, creator) VALUES (?, ?, ?, ?)";
+    public String createMenu(String name, Float price, String creator, ArrayList<Integer> list_dish) {
+        String queryMenu = "INSERT INTO menu(name, price, last_update, creator) VALUES (?, ?, NOW(), ?)";
         String queryComposMenu = "INSERT INTO compos_menu(id_menu, id_dish) VALUES (?, ?)";
         int newId = -1;
 
         try (PreparedStatement ps = dbConnection.prepareStatement(queryMenu, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, name);
             ps.setFloat(2, price);
-            ps.setString(3, last_update);
-            ps.setString(4, creator);
+            ps.setString(3, creator);
 
             int nbRowModified = ps.executeUpdate();
 
@@ -165,26 +167,28 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
     }
 
 
+
+
+
     @Override
     public boolean updateMenu(String id_menu, String name, String creator) {
-        String queryMenu = "UPDATE menu SET name=?, creator=? WHERE id_menu=?";
-
+        String queryMenu = "UPDATE menu SET name=?, creator=?, last_update=? WHERE id_menu=?";
         int nbRowModified = 0;
 
         // Construction et exécution d'une requête préparée pour mettre à jour le menu
         try (PreparedStatement psMenu = dbConnection.prepareStatement(queryMenu)) {
             psMenu.setString(1, name);
             psMenu.setString(2, creator);
-            psMenu.setString(3, id_menu);
+            psMenu.setTimestamp(3, new Timestamp(new Date().getTime()));
+            psMenu.setString(4, id_menu);
             nbRowModified += psMenu.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        // Construction et exécution de requêtes préparées pour mettre à jour les plats associés existant
-
         return (nbRowModified != 0);
     }
+
 
 
     @Override
