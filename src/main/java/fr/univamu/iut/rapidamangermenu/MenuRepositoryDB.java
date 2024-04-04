@@ -123,7 +123,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
     @Override
     public String createMenu(String name, Float price, String last_update, String creator, ArrayList<Integer> list_dish) {
         String queryMenu = "INSERT INTO menu(name, price, last_update, creator) VALUES (?, ?, ?, ?)";
-        String queryComposMenu = "INSERT INTO compos_menu( id_dish) VALUES (?)";
+        String queryComposMenu = "INSERT INTO compos_menu(id_menu, id_dish) VALUES (?, ?)";
         int newId = -1;
 
         try (PreparedStatement ps = dbConnection.prepareStatement(queryMenu, Statement.RETURN_GENERATED_KEYS)) {
