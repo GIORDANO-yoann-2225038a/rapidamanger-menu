@@ -11,9 +11,18 @@ public interface MenuRepositoryInterface {
 
     public boolean deleteMenu (String id );
 
-    public String createMenu (String name, Integer id_menu,Float price, String last_update, String creator, ArrayList<Integer> list_dish);
+    public String createMenu (String name, Float price, String last_update, String creator, ArrayList<Integer> list_dish);
 
     public boolean updateMenu (String id_menu, String name, String creator);
+/*
 
+    void addDishToMenu(int menuId, DishMenu dishMenu);
+
+
+    void removeDishToMenu(int menuId, DishMenu dishId);
+
+
+
+ */
 
 }

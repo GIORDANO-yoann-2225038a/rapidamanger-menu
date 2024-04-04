@@ -67,7 +67,6 @@ public class MenuRessource {
         JSONObject obj = new JSONObject(menuJson);
 
         String name = obj.getString("name");
-        Integer id_menu = obj.getInt("id_menu");
         Float price = Float.parseFloat(obj.getString("price"));
         String last_update = obj.getString("last_update");
         String creator = obj.getString("creator");
@@ -79,7 +78,7 @@ public class MenuRessource {
             list_dish.add(listDishArray.getInt(i));
         }
 
-        String result = service.createMenu(name, id_menu, price, last_update, creator, list_dish);
+        String result = service.createMenu(name, price, last_update, creator, list_dish);
 
         // si la création a échoué
         if (result == null)
@@ -121,5 +120,25 @@ public class MenuRessource {
         return Response.ok(result).build();
 
     }
+
+
+ /*
+    @PUT
+    @Path("{id}/add")
+    @Consumes("application/json")
+    public Response addDishToMenu(@PathParam("id") int id, DishMenu dishMenu) {
+        service.addDishToMenu(id, dishMenu);
+        return Response.status(Response.Status.OK).entity("plats ajouté à la Commande").build();
+    }
+
+    @PUT
+    @Path("{id}/remove")
+    @Consumes("application/json")
+    public Response removeDishToMenu(@PathParam("id") int id, DishMenu dishMenu) {
+        service.removeDishToMenu(id, dishMenu);
+        return Response.status(Response.Status.OK).entity("plat supprimé du commande").build();
+    }
+
+  */
 
 }

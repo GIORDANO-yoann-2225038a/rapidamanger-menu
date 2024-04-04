@@ -121,17 +121,16 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
     }
 
     @Override
-    public String createMenu(String name, Integer id_menu, Float price, String last_update, String creator, ArrayList<Integer> list_dish) {
-        String queryMenu = "INSERT INTO menu(name, id_menu, price, last_update, creator) VALUES (?, ?, ?, ?, ?)";
-        String queryComposMenu = "INSERT INTO compos_menu(id_menu, id_dish) VALUES (?, ?)";
+    public String createMenu(String name, Float price, String last_update, String creator, ArrayList<Integer> list_dish) {
+        String queryMenu = "INSERT INTO menu(name, price, last_update, creator) VALUES (?, ?, ?, ?)";
+        String queryComposMenu = "INSERT INTO compos_menu( id_dish) VALUES (?)";
         int newId = -1;
 
         try (PreparedStatement ps = dbConnection.prepareStatement(queryMenu, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, name);
-            ps.setInt(2, id_menu);
-            ps.setFloat(3, price);
-            ps.setString(4, last_update);
-            ps.setString(5, creator);
+            ps.setFloat(2, price);
+            ps.setString(3, last_update);
+            ps.setString(4, creator);
 
             int nbRowModified = ps.executeUpdate();
 
@@ -184,5 +183,38 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
 
         return (nbRowModified != 0);
     }
+
+/*
+    @Override
+    public void addDishToMenu(int menuId, DishMenu dishMenu) {
+        String query = "INSERT INTO compos_menu (list_dish, id_menu) VALUES (?, ?)";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            ps.setInt(1, menuId);
+            ps.setInt(2, dishMenu.getDishId());
+
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Override
+    public void removeDishToMenu(int menuId, DishMenu dishId) {
+        String query = "DELETE FROM compos_menu WHERE list_dish=? AND id_menu=?";
+
+        try (PreparedStatement ps = dbConnection.prepareStatement(query)) {
+            ps.setInt(1, menuId);
+            ps.setInt(2, dishId.getDishId());
+
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+ */
 
 }

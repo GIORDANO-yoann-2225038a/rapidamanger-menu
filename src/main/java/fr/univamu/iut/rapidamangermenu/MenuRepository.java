@@ -32,7 +32,7 @@ public class MenuRepository  implements MenuRepositoryInterface, Closeable{
     }
 
     @Override
-    public String createMenu (String name, Integer id_menu,Float price, String last_update, String creator, ArrayList<Integer> list_dish) {
+    public String createMenu (String name,Float price, String last_update, String creator, ArrayList<Integer> list_dish) {
         return null;
     }
 
@@ -40,6 +40,19 @@ public class MenuRepository  implements MenuRepositoryInterface, Closeable{
     public boolean updateMenu (String id_menu, String name, String creator) {
         return false;
     }
+
+    /*
+    public void addDishToMenu(int menuId, DishMenu dishMenu) {
+
+    }
+
+
+    public void removeDishToMenu(int menuId, DishMenu dishId) {
+
+    }
+
+     */
+
 
 
 }
