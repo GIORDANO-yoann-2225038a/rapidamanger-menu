@@ -13,15 +13,18 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
 
     protected Connection dbConnection;
 
+    // Constructeur prenant les informations de connexion à la base de données
     public MenuRepositoryDB(String infoConnection, String user, String pwd ) throws java.sql.SQLException, java.lang.ClassNotFoundException {
         Class.forName("org.mariadb.jdbc.Driver");
         dbConnection = DriverManager.getConnection( infoConnection, user, pwd ) ;
     }
 
+    // Constructeur prenant une connexion existante à la base de données
     public MenuRepositoryDB(Connection connection) {
         this.dbConnection = connection;
     }
 
+    // Méthode pour fermer la connexion à la base de données
     @Override
     public void close() {
         try {
@@ -31,6 +34,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         }
     }
 
+    // Méthode pour récupérer un menu en fonction de son identifiant
     @Override
     public Menu getMenu(String id) {
         Menu selectedMenu = null;
@@ -67,6 +71,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         return selectedMenu;
     }
 
+    // Méthode pour récupérer tous les menus
     @Override
     public ArrayList<Menu> getAllMenu() {
         ArrayList<Menu> listMenu = new ArrayList<>();
@@ -83,7 +88,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
                 String last_update = result.getString("last_update");
                 String creator = result.getString("creator");
 
-                ArrayList<Integer> listDish = new ArrayList<>();
+                ArrayList<Integer> list_dish = new ArrayList<>();
 
                 String recupdish = "SELECT * FROM compos_menu WHERE id_menu=?";
                 try (PreparedStatement ps1 = dbConnection.prepareStatement(recupdish)) {
@@ -92,11 +97,11 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
 
                     while (result1.next()) {
                         int id_dish = result1.getInt("id_dish");
-                        listDish.add(id_dish);
+                        list_dish.add(id_dish);
                     }
                 }
 
-                Menu currentMenu = new Menu(name, id_menu, price, last_update, creator, listDish);
+                Menu currentMenu = new Menu(name, id_menu, price, last_update, creator, list_dish);
                 listMenu.add(currentMenu);
             }
         } catch (SQLException e) {
@@ -105,6 +110,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         return listMenu;
     }
 
+    // Méthode pour supprimer un menu en fonction de son identifiant
     @Override
     public boolean deleteMenu(String id) {
         String deleteMenuQuery = "DELETE FROM menu WHERE id_menu=?";
@@ -125,6 +131,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         return (nbRowModified != 0);
     }
 
+    // Méthode pour créer un nouveau menu
     @Override
     public String createMenu(String name, Float price, String creator, ArrayList<Integer> list_dish) {
         String queryMenu = "INSERT INTO menu(name, price, last_update, creator) VALUES (?, ?, NOW(), ?)";
@@ -166,21 +173,19 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         return String.valueOf(newId);
     }
 
-
-
-
-
+    // Méthode pour mettre à jour les informations d'un menu
     @Override
-    public boolean updateMenu(String id_menu, String name, String creator) {
-        String queryMenu = "UPDATE menu SET name=?, creator=?, last_update=? WHERE id_menu=?";
+    public boolean updateMenu(String id_menu, String price, String name, String creator) {
+        String queryMenu = "UPDATE menu SET name=?, price=?, creator=?, last_update=? WHERE id_menu=?";
         int nbRowModified = 0;
 
         // Construction et exécution d'une requête préparée pour mettre à jour le menu
         try (PreparedStatement psMenu = dbConnection.prepareStatement(queryMenu)) {
             psMenu.setString(1, name);
-            psMenu.setString(2, creator);
-            psMenu.setTimestamp(3, new Timestamp(new Date().getTime()));
-            psMenu.setString(4, id_menu);
+            psMenu.setString(2, price);
+            psMenu.setString(3, creator);
+            psMenu.setTimestamp(4, new Timestamp(new Date().getTime()));
+            psMenu.setString(5, id_menu);
             nbRowModified += psMenu.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -189,8 +194,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         return (nbRowModified != 0);
     }
 
-
-
+    // Méthode pour ajouter un plat à un menu
     @Override
     public void addDishToMenu(int menuId, String dishId) {
         String query = "INSERT INTO compos_menu (id_menu, id_dish) VALUES (?, ?)";
@@ -205,8 +209,7 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         }
     }
 
-
-
+    // Méthode pour supprimer un plat d'un menu
     @Override
     public void removeDishToMenu(int menuId, String dishId) {
         String query = "DELETE FROM compos_menu WHERE id_menu=? AND id_dish=?";
@@ -220,8 +223,5 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
             throw new RuntimeException(e);
         }
     }
-
-
-
 
 }
