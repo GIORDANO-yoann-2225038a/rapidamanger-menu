@@ -13,18 +13,35 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
 
     protected Connection dbConnection;
 
+
+    /**
+     * Constructeur prenant les informations de connexion à la base de données.
+     * @param infoConnection Informations de connexion à la base de données.
+     * @param user Nom d'utilisateur pour la connexion.
+     * @param pwd Mot de passe pour la connexion.
+     * @throws SQLException Si une erreur survient lors de l'accès à la base de données.
+     * @throws ClassNotFoundException Si la classe du pilote JDBC n'a pas pu être trouvée.
+     */
+
     // Constructeur prenant les informations de connexion à la base de données
     public MenuRepositoryDB(String infoConnection, String user, String pwd ) throws java.sql.SQLException, java.lang.ClassNotFoundException {
         Class.forName("org.mariadb.jdbc.Driver");
         dbConnection = DriverManager.getConnection( infoConnection, user, pwd ) ;
     }
 
-    // Constructeur prenant une connexion existante à la base de données
+    /**
+     * Constructeur prenant une connexion existante à la base de données.
+     * @param connection Connexion existante à la base de données.
+     */
+
     public MenuRepositoryDB(Connection connection) {
         this.dbConnection = connection;
     }
 
-    // Méthode pour fermer la connexion à la base de données
+    /**
+     * Méthode pour fermer la connexion à la base de données.
+     */
+
     @Override
     public void close() {
         try {
@@ -34,7 +51,11 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         }
     }
 
-    // Méthode pour récupérer un menu en fonction de son identifiant
+    /**
+     * Méthode pour récupérer un menu en fonction de son identifiant.
+     * @param id L'identifiant du menu à récupérer.
+     * @return Le menu correspondant à l'identifiant spécifié.
+     */
     @Override
     public Menu getMenu(String id) {
         Menu selectedMenu = null;
@@ -71,7 +92,11 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         return selectedMenu;
     }
 
-    // Méthode pour récupérer tous les menus
+    /**
+     * Méthode pour récupérer tous les menus.
+     * @return Une liste contenant tous les menus disponibles dans la base de données.
+     */
+
     @Override
     public ArrayList<Menu> getAllMenu() {
         ArrayList<Menu> listMenu = new ArrayList<>();
@@ -110,7 +135,12 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         return listMenu;
     }
 
-    // Méthode pour supprimer un menu en fonction de son identifiant
+    /**
+     * Méthode pour supprimer un menu en fonction de son identifiant.
+     * @param id L'identifiant du menu à supprimer.
+     * @return true si la suppression a réussi, sinon false.
+     */
+
     @Override
     public boolean deleteMenu(String id) {
         String deleteMenuQuery = "DELETE FROM menu WHERE id_menu=?";
@@ -131,7 +161,15 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         return (nbRowModified != 0);
     }
 
-    // Méthode pour créer un nouveau menu
+    /**
+     * Méthode pour créer un nouveau menu.
+     * @param name Le nom du nouveau menu.
+     * @param price Le prix du nouveau menu.
+     * @param creator Le créateur du nouveau menu.
+     * @param list_dish La liste des plats composant le nouveau menu.
+     * @return L'identifiant du nouveau menu créé.
+     */
+
     @Override
     public String createMenu(String name, Float price, String creator, ArrayList<Integer> list_dish) {
         String queryMenu = "INSERT INTO menu(name, price, last_update, creator) VALUES (?, ?, NOW(), ?)";
@@ -173,7 +211,15 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         return String.valueOf(newId);
     }
 
-    // Méthode pour mettre à jour les informations d'un menu
+    /**
+     * Méthode pour mettre à jour les informations d'un menu.
+     * @param id_menu L'identifiant du menu à mettre à jour.
+     * @param price Le nouveau prix du menu.
+     * @param name Le nouveau nom du menu.
+     * @param creator Le nouveau créateur du menu.
+     * @return true si la mise à jour a réussi, sinon false.
+     */
+
     @Override
     public boolean updateMenu(String id_menu, String price, String name, String creator) {
         String queryMenu = "UPDATE menu SET name=?, price=?, creator=?, last_update=? WHERE id_menu=?";
@@ -194,7 +240,12 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         return (nbRowModified != 0);
     }
 
-    // Méthode pour ajouter un plat à un menu
+    /**
+     * Méthode pour ajouter un plat à un menu.
+     * @param menuId L'identifiant du menu auquel ajouter le plat.
+     * @param dishId L'identifiant du plat à ajouter au menu.
+     */
+
     @Override
     public void addDishToMenu(int menuId, String dishId) {
         String query = "INSERT INTO compos_menu (id_menu, id_dish) VALUES (?, ?)";
@@ -209,7 +260,11 @@ public class MenuRepositoryDB implements MenuRepositoryInterface, Cloneable {
         }
     }
 
-    // Méthode pour supprimer un plat d'un menu
+    /**
+     * Méthode pour supprimer un plat d'un menu.
+     * @param menuId L'identifiant du menu duquel supprimer le plat.
+     * @param dishId L'identifiant du plat à supprimer du menu.
+     */
     @Override
     public void removeDishToMenu(int menuId, String dishId) {
         String query = "DELETE FROM compos_menu WHERE id_menu=? AND id_dish=?";

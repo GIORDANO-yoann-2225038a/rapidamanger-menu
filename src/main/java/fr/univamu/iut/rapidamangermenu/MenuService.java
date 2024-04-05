@@ -2,9 +2,6 @@ package fr.univamu.iut.rapidamangermenu;
 
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
-import jakarta.json.*;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Response;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -20,7 +17,10 @@ public class MenuService {
         this.menuRepo = menuRepo;
     }
 
-    // Méthode pour récupérer tous les menus au format JSON
+    /**
+     * Récupère tous les menus au format JSON.
+     * @return Une chaîne JSON représentant tous les menus.
+     */
     public String getAllMenuJSON() {
         ArrayList<Menu> allMenu = menuRepo.getAllMenu();
         String result = null;
@@ -34,7 +34,11 @@ public class MenuService {
         return result;
     }
 
-    // Méthode pour récupérer un menu au format JSON en fonction de son identifiant
+    /**
+     * Récupère un menu au format JSON en fonction de son identifiant.
+     * @param id L'identifiant du menu à récupérer.
+     * @return Une chaîne JSON représentant le menu, ou null s'il n'existe pas.
+     */
     public String getMenuJSON(String id) {
         String result = null;
         Menu myMenu = menuRepo.getMenu(id);
@@ -50,7 +54,11 @@ public class MenuService {
         return result;
     }
 
-    // Méthode pour supprimer un menu en fonction de son identifiant
+    /**
+     * Supprime un menu en fonction de son identifiant.
+     * @param id L'identifiant du menu à supprimer.
+     * @return Une chaîne JSON représentant l'identifiant du menu supprimé, ou null si le menu n'a pas été trouvé.
+     */
     public String deleteMenu(String id) {
         String result = null;
 
@@ -63,7 +71,14 @@ public class MenuService {
         return result;
     }
 
-    // Méthode pour créer un nouveau menu avec les informations fournies
+    /**
+     * Crée un nouveau menu avec les informations fournies.
+     * @param name Le nom du nouveau menu.
+     * @param price Le prix du nouveau menu.
+     * @param creator Le créateur du nouveau menu.
+     * @param list_dish La liste des plats du nouveau menu.
+     * @return Une chaîne JSON représentant l'identifiant du nouveau menu créé.
+     */
     public String createMenu(String name, Float price, String creator, ArrayList<Integer> list_dish) {
         try (Jsonb jsonb = JsonbBuilder.create()) {
             String idOfNewMenu = menuRepo.createMenu(name, price, creator, list_dish);
@@ -73,7 +88,14 @@ public class MenuService {
         }
     }
 
-    // Méthode pour mettre à jour un menu avec les nouvelles informations fournies
+    /**
+     * Met à jour un menu avec les nouvelles informations fournies.
+     * @param id_menu L'identifiant du menu à mettre à jour.
+     * @param price Le nouveau prix du menu.
+     * @param name Le nouveau nom du menu.
+     * @param creator Le nouveau créateur du menu.
+     * @return Une chaîne JSON représentant l'identifiant du menu mis à jour, ou null si le menu n'a pas été trouvé.
+     */
     public String updateMenu(String id_menu, String price, String name,  String creator) {
         String result = null;
 
@@ -87,12 +109,20 @@ public class MenuService {
         return result;
     }
 
-    // Méthode pour ajouter un plat à un menu
+    /**
+     * Ajoute un plat à un menu.
+     * @param menuId L'identifiant du menu auquel ajouter le plat.
+     * @param dishMenu L'identifiant du plat à ajouter.
+     */
     public void addDishToMenu(int menuId, String dishMenu) {
         menuRepo.addDishToMenu(menuId, dishMenu);
     }
 
-    // Méthode pour supprimer un plat d'un menu
+    /**
+     * Supprime un plat d'un menu.
+     * @param menuId L'identifiant du menu duquel supprimer le plat.
+     * @param dishId L'identifiant du plat à supprimer.
+     */
     public void removeDishToMenu(int menuId, String dishId) {
         menuRepo.removeDishToMenu(menuId, dishId);
     }

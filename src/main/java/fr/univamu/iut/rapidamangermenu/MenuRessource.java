@@ -12,7 +12,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-// Ressource REST pour les menus
+/**
+ * Ressource REST pour les menus.
+ */
 @Path("/menu")
 public class MenuRessource {
 
@@ -31,6 +33,11 @@ public class MenuRessource {
         this.service = service;
     }
 
+    /**
+     * Récupère le prix d'un plat à partir d'une API externe.
+     * @param dishId L'identifiant du plat.
+     * @return Le prix du plat.
+     */
     private Float getDishPriceFromAPI(int dishId) {
         String jsonResponse = "julot";
         try {
@@ -64,14 +71,21 @@ public class MenuRessource {
         return prix;
     }
 
-    // Méthode pour récupérer tous les menus
+    /**
+     * Récupère tous les menus.
+     * @return Une réponse HTTP avec tous les menus en format JSON.
+     */
     @GET
     @Produces("application/json")
     public Response getAllMenu() {
         return Response.ok(service.getAllMenuJSON()).build();
     }
 
-    // Méthode pour récupérer un menu en fonction de son identifiant
+    /**
+     * Récupère un menu en fonction de son identifiant.
+     * @param id L'identifiant du menu.
+     * @return Une réponse HTTP avec le menu en format JSON s'il existe, sinon NOT_FOUND.
+     */
     @GET
     @Path("{id}")
     @Produces("application/json")
@@ -85,7 +99,11 @@ public class MenuRessource {
         return Response.ok(result).build();
     }
 
-    // Méthode pour supprimer un menu en fonction de son identifiant
+    /**
+     * Supprime un menu en fonction de son identifiant.
+     * @param id L'identifiant du menu à supprimer.
+     * @return Une réponse HTTP avec le résultat de la suppression en format JSON, sinon NOT_FOUND.
+     */
     @DELETE
     @Path("{id}")
     @Produces("application/json")
@@ -99,7 +117,11 @@ public class MenuRessource {
         return Response.ok(result).build();
     }
 
-    // Méthode pour créer un nouveau menu
+    /**
+     * Crée un nouveau menu à partir d'un JSON.
+     * @param menuJson Le JSON contenant les informations du nouveau menu.
+     * @return Une réponse HTTP avec l'identifiant du nouveau menu en format JSON s'il est créé avec succès, sinon BAD_REQUEST.
+     */
     @POST
     @Consumes("application/json")
     @Produces("application/json")
@@ -126,7 +148,12 @@ public class MenuRessource {
         return Response.ok(result).build();
     }
 
-    // Méthode pour mettre à jour un menu
+    /**
+     * Met à jour un menu à partir d'un JSON.
+     * @param menuId L'identifiant du menu à mettre à jour.
+     * @param menuJson Le JSON contenant les nouvelles informations du menu.
+     * @return Une réponse HTTP avec le résultat de la mise à jour en format JSON, sinon NOT_FOUND.
+     */
     @PUT
     @Path("{id}")
     @Consumes("application/json")
@@ -161,7 +188,12 @@ public class MenuRessource {
         return Response.ok(result).build();
     }
 
-    // Méthode pour ajouter un plat à un menu
+    /**
+     * Ajoute un plat à un menu.
+     * @param id L'identifiant du menu auquel ajouter le plat.
+     * @param dish Le JSON contenant l'identifiant du plat à ajouter.
+     * @return Une réponse HTTP avec le résultat de l'ajout en format JSON.
+     */
     @PUT
     @Path("{id}/add")
     @Consumes("application/json")
@@ -169,32 +201,36 @@ public class MenuRessource {
         JSONObject obj = new JSONObject(dish);
         service.addDishToMenu(id,obj.getString("dishId"));
 
-            int dishId = obj.getInt("dishId");
+        int dishId = obj.getInt("dishId");
 
-            // Récupérer le prix du menu à partir de l'API externe
-            float dishPrice = getDishPriceFromAPI(dishId);
+        // Récupérer le prix du menu à partir de l'API externe
+        float dishPrice = getDishPriceFromAPI(dishId);
 
-            // Récupérer la commande
-            JSONObject currentMenu = new JSONObject(service.getMenuJSON(String.valueOf(id)));
+        // Récupérer la commande
+        JSONObject currentMenu = new JSONObject(service.getMenuJSON(String.valueOf(id)));
 
-            // Ajouter le prix du nouveau menu au prix total de la commande
-            float totalPrice = currentMenu.getFloat("price") + dishPrice;
+        // Ajouter le prix du nouveau menu au prix total de la commande
+        float totalPrice = currentMenu.getFloat("price") + dishPrice;
 
-            // Mettre à jour le prix total de la commande dans l'objet JSON de la commande
-            currentMenu.put("price", totalPrice);
+        // Mettre à jour le prix total de la commande dans l'objet JSON de la commande
+        currentMenu.put("price", totalPrice);
 
-            // Mettre à jour la commande dans le service
-            String result = service.updateMenu(String.valueOf(id), String.valueOf(totalPrice), currentMenu.getString("name"),  currentMenu.getString("creator"));
+        // Mettre à jour la commande dans le service
+        String result = service.updateMenu(String.valueOf(id), String.valueOf(totalPrice), currentMenu.getString("name"),  currentMenu.getString("creator"));
 
-            // Vérifier si la mise à jour de la commande a réussi
-            if (result == null)
-                return Response.status(Response.Status.NOT_FOUND).build();
+        // Vérifier si la mise à jour de la commande a réussi
+        if (result == null)
+            return Response.status(Response.Status.NOT_FOUND).build();
 
-            return Response.status(Response.Status.OK).entity("Menu ajouté à la commande").build();
+        return Response.status(Response.Status.OK).entity("Menu ajouté à la commande").build();
     }
 
-
-    // Méthode pour supprimer un plat d'un menu
+    /**
+     * Supprime un plat d'un menu.
+     * @param id L'identifiant du menu duquel supprimer le plat.
+     * @param dish Le JSON contenant l'identifiant du plat à supprimer.
+     * @return Une réponse HTTP avec le résultat de la suppression en format JSON.
+     */
     @PUT
     @Path("{id}/remove")
     @Consumes("application/json")

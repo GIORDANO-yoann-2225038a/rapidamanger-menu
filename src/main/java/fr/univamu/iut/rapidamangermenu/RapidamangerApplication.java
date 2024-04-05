@@ -1,8 +1,5 @@
 package fr.univamu.iut.rapidamangermenu;
 
-import fr.univamu.iut.rapidamangermenu.MenuRepositoryDB;
-import fr.univamu.iut.rapidamangermenu.MenuRessource;
-import fr.univamu.iut.rapidamangermenu.MenuService;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
 
@@ -12,11 +9,19 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
-// Application RESTful pour Rapidamanger
+/**
+ * Application RESTful pour Rapidamanger.
+ * Cette classe configure les endpoints de l'API REST en associant les ressources avec les services correspondants.
+ */
 @ApplicationPath("/api")
 public class RapidamangerApplication extends Application {
 
-    // Méthode pour récupérer les singletons de l'application
+    /**
+     * Méthode pour récupérer les singletons de l'application.
+     * Elle initialise les services et les associe aux ressources pour répondre aux requêtes HTTP.
+     *
+     * @return Un ensemble d'objets représentant les ressources de l'application.
+     */
     @Override
     public Set<Object> getSingletons() {
         Set<Object> set = new HashSet<>();
